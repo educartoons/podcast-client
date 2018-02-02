@@ -1,23 +1,40 @@
 <template>
   <div class="podcast">
-    <a href="#" class="podcast__play">
+    <a href="#" class="podcast__play" @click.prevent="switchPodcast(podcast.id)">
       <img class="podcast__playButton" src="../../assets/img/play.svg" alt="Play">
     </a>
     <div class="podcast__details">
       <div class="podcast__sub">
-        2 days ago
+        <time :datetime="podcast.created_at">{{ podcast.created_at_human }}</time>
       </div>
       <h2 class="podcast__header">
-        <a href="#">Lorem ipsum dolor sit amet.</a>
+        <a href="#asdad" @click.prevent="switchPodcast(podcast.id)">{{ podcast.title }}</a>
       </h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      <p>{{ podcast.description }}</p>
     </div>
   </div>
 </template>
 
 <script>
+
+  import { mapActions } from 'vuex'
+
   export default {
-    name: 'podcast-simple'
+    name: 'podcast-simple',
+    props: [
+      'podcast'
+    ],
+    methods: {
+      ...mapActions({
+        getPodcast: 'podcasts/getPodcast',
+        setPlaying: 'player/setPlaying',
+      }),
+      switchPodcast (id) {
+        this.getPodcast(id).then( (podcast) => {
+            this.setPlaying(podcast)
+        })
+      }
+    }
   }
 </script>
 
@@ -45,7 +62,7 @@
       padding: 40px;
     }
     &__play{
-      width: 55%;
+      width: 15%;
       background-color: $blue;
       align-items: center;
       justify-content: center;
@@ -62,7 +79,7 @@
         }
       }
       &--hidden{
-        margin-left: -25%;
+        margin-left: -15%;
       }
     }
     &__playButton{
